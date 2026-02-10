@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Play, Upload, Zap, ChevronRight } from "lucide-react";
+import challengeFeatured from "@/assets/challenge-featured.jpg";
+import challengeCats from "@/assets/challenge-cats.jpg";
+import challengeFails from "@/assets/challenge-fails.jpg";
+import challengeDadjokes from "@/assets/challenge-dadjokes.jpg";
+import challengeAnimals from "@/assets/challenge-animals.jpg";
+import challengeMemes from "@/assets/challenge-memes.jpg";
 
-const previews = [
-  { id: 1, emoji: "😂", label: "Classic comedy clips", difficulty: "Easy" },
-  { id: 2, emoji: "🤣", label: "Stand-up one-liners", difficulty: "Medium" },
-  { id: 3, emoji: "💀", label: "Unexpected moments", difficulty: "Hard" },
-  { id: 4, emoji: "😈", label: "Impossible tier", difficulty: "Expert" },
+const challenges = [
+  { id: 1, label: "Funny cat compilations", difficulty: "Easy", players: "1.2M", img: challengeCats },
+  { id: 2, label: "Epic fail moments", difficulty: "Medium", players: "890k", img: challengeFails },
+  { id: 3, label: "Dad jokes marathon", difficulty: "Medium", players: "670k", img: challengeDadjokes },
+  { id: 4, label: "Silly animal videos", difficulty: "Easy", players: "2.3M", img: challengeAnimals },
+  { id: 5, label: "Meme overload", difficulty: "Hard", players: "540k", img: challengeMemes },
 ];
 
 const VariantB2 = () => {
@@ -62,16 +69,19 @@ const VariantB2 = () => {
         {activeTab === "try" ? (
           <div className="space-y-5">
             {/* Featured challenge */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden">
-              <div className="aspect-[16/9] bg-secondary flex items-center justify-center relative">
-                <span className="text-5xl">😂</span>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            <div className="bg-card border border-border rounded-2xl overflow-hidden cursor-pointer hover:border-primary/40 transition-colors">
+              <div className="aspect-[16/9] relative overflow-hidden">
+                <img src={challengeFeatured} alt="Try Not to Laugh" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                <div className="absolute top-3 left-3">
+                  <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Featured</span>
+                </div>
                 <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
                   <div>
                     <p className="text-white text-sm font-bold">Try Not to Laugh</p>
                     <p className="text-white/70 text-xs">2.1M players · 23% survival rate</p>
                   </div>
-                  <div className="bg-primary rounded-full p-2.5">
+                  <div className="bg-primary rounded-full p-2.5 shadow-lg">
                     <Play className="w-4 h-4 text-primary-foreground fill-primary-foreground" />
                   </div>
                 </div>
@@ -84,19 +94,22 @@ const VariantB2 = () => {
                 More challenges
               </p>
               <div className="space-y-2">
-                {previews.slice(1).map((p) => (
+                {challenges.map((c) => (
                   <div
-                    key={p.id}
-                    className="flex items-center gap-3 bg-card border border-border rounded-xl p-3 cursor-pointer hover:border-primary/40 transition-colors"
+                    key={c.id}
+                    className="flex items-center gap-3 bg-card border border-border rounded-xl p-2 cursor-pointer hover:border-primary/40 transition-colors group"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                      <span className="text-xl">{p.emoji}</span>
+                    <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative">
+                      <img src={c.img} alt={c.label} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                        <Play className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white" />
+                      </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{p.label}</p>
-                      <p className="text-xs text-muted-foreground">{p.difficulty}</p>
+                      <p className="text-sm font-semibold text-foreground">{c.label}</p>
+                      <p className="text-xs text-muted-foreground">{c.difficulty} · {c.players} players</p>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                    <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
                   </div>
                 ))}
               </div>
