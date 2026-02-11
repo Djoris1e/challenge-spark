@@ -177,20 +177,16 @@ const ChallengePlayer = ({
         />
       )}
 
-      {/* Countdown: label on top half, number on bottom half */}
+      {/* Countdown: label + number stacked together, centered on screen */}
       {phase === "countdown" && (
-        <>
-          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-center justify-center pointer-events-none">
-            <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
-              Get ready…
-            </span>
-          </div>
-          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-center justify-center pointer-events-none">
-            <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in">
-              {countdown}
-            </span>
-          </div>
-        </>
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+          <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
+            Get ready…
+          </span>
+          <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in mt-3">
+            {countdown}
+          </span>
+        </div>
       )}
 
       {/* Active / Result overlay text — centered */}
