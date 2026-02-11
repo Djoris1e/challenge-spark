@@ -161,7 +161,7 @@ const ChallengePlayer = ({
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
       {/* Top nav — clean TikTok style, no pill backgrounds */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-[env(safe-area-inset-top,28px)] pb-2">
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-12 pb-2">
         <button onClick={onHome} className="active:scale-90 transition-transform">
           <Home className="w-6 h-6 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
@@ -249,29 +249,29 @@ const ChallengePlayer = ({
         )}
       </div>
 
-      {/* Right-side TikTok-style action buttons — always visible in review */}
-      {phase === "review" && (
-        <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-5">
-          {[
-            { icon: RotateCcw, label: "Again", action: handleRestart },
-            { icon: Share2, label: "Share", action: handleShare },
-            { icon: Download, label: "Save", action: handleSave },
-          ].map(({ icon: Icon, label, action }) => (
-            <button key={label} onClick={action} className="flex flex-col items-center gap-1 group active:scale-90 transition-transform">
-              <Icon className="w-7 h-7 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.4)]" />
-              <span className="text-[10px] text-foreground font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,.5)]">{label}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* Next button — always visible, bottom-right */}
-      <button
-        onClick={onNext}
-        className="absolute bottom-6 right-3 z-20 bg-primary rounded-full w-12 h-12 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
-      >
-        <ChevronDown className="w-5 h-5 text-primary-foreground" />
-      </button>
+      {/* Right-side action column — Next always at bottom, review buttons stacked above */}
+      <div className="absolute right-3 bottom-6 z-20 flex flex-col items-center gap-5">
+        {phase === "review" && (
+          <>
+            {[
+              { icon: RotateCcw, label: "Again", action: handleRestart },
+              { icon: Share2, label: "Share", action: handleShare },
+              { icon: Download, label: "Save", action: handleSave },
+            ].map(({ icon: Icon, label, action }) => (
+              <button key={label} onClick={action} className="flex flex-col items-center gap-1 group active:scale-90 transition-transform">
+                <Icon className="w-7 h-7 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.4)]" />
+                <span className="text-[10px] text-foreground font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,.5)]">{label}</span>
+              </button>
+            ))}
+          </>
+        )}
+        <button
+          onClick={onNext}
+          className="bg-primary rounded-full w-12 h-12 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
+        >
+          <ChevronDown className="w-5 h-5 text-primary-foreground" />
+        </button>
+      </div>
     </div>
   );
 };
