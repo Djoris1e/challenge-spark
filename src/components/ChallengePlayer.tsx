@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Home, Plus, RotateCcw, Download, Share2, ChevronDown, Play, Heart, MessageCircle } from "lucide-react";
+import { Home, Plus, RotateCcw, Download, Share2, ChevronDown, Play } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 type Phase = "countdown" | "active" | "result" | "review";
@@ -170,7 +170,7 @@ const ChallengePlayer = ({
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
       {/* Top nav — clean TikTok style, no pill backgrounds */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,14px)] pb-2">
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-[env(safe-area-inset-top,20px)] pb-2">
         <button onClick={onHome} className="active:scale-90 transition-transform">
           <Home className="w-6 h-6 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
@@ -246,8 +246,6 @@ const ChallengePlayer = ({
       {phase === "review" && (
         <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-5">
           {[
-            { icon: Heart, label: "Like", action: () => toast({ title: "Liked! ❤️" }) },
-            { icon: MessageCircle, label: "Comment", action: () => {} },
             { icon: RotateCcw, label: "Again", action: handleRestart },
             { icon: Share2, label: "Share", action: handleShare },
             { icon: Download, label: "Save", action: handleSave },
