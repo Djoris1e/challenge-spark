@@ -179,7 +179,7 @@ const ChallengePlayer = ({
 
       {/* Countdown: label + number stacked together, centered on screen */}
       {phase === "countdown" && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 z-20 flex flex-col items-center pointer-events-none" style={{ justifyContent: "center", paddingTop: "10%" }}>
           <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
             Get ready…
           </span>
@@ -191,7 +191,7 @@ const ChallengePlayer = ({
 
       {/* Active / Result overlay text — centered */}
       {(phase === "active" || phase === "result") && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none" style={{ paddingTop: "10%" }}>
           {renderOverlayText()}
         </div>
       )}
