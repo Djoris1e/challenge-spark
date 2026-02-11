@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Play, Camera, ChevronRight, ArrowLeft, X } from "lucide-react";
+import { Play, Camera, X } from "lucide-react";
 import challengeFeatured from "@/assets/challenge-featured.jpg";
 import challengeCats from "@/assets/challenge-cats.jpg";
 import challengeFails from "@/assets/challenge-fails.jpg";
@@ -11,11 +11,11 @@ import challengeAnimals from "@/assets/challenge-animals.jpg";
 import challengeMemes from "@/assets/challenge-memes.jpg";
 
 const challenges = [
-  { id: 1, label: "Funny cat compilations", difficulty: "Easy", players: "1.2M", img: challengeCats },
-  { id: 2, label: "Epic fail moments", difficulty: "Medium", players: "890k", img: challengeFails },
-  { id: 3, label: "Dad jokes marathon", difficulty: "Medium", players: "670k", img: challengeDadjokes },
-  { id: 4, label: "Silly animal videos", difficulty: "Easy", players: "2.3M", img: challengeAnimals },
-  { id: 5, label: "Meme overload", difficulty: "Hard", players: "540k", img: challengeMemes },
+  { id: 1, img: challengeCats },
+  { id: 2, img: challengeFails },
+  { id: 3, img: challengeDadjokes },
+  { id: 4, img: challengeAnimals },
+  { id: 5, img: challengeMemes },
 ];
 
 const VariantB2 = () => {
@@ -90,28 +90,21 @@ const VariantB2 = () => {
               </div>
             </div>
 
-            {/* More challenges list */}
+            {/* More challenges */}
             <div>
               <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-3">
                 More challenges
               </p>
-              <div className="space-y-2">
+              <div className="grid grid-cols-3 gap-2">
                 {challenges.map((c) => (
                   <div
                     key={c.id}
-                    className="flex items-center gap-3 bg-card border border-border rounded-xl p-2 cursor-pointer hover:border-primary/40 transition-colors group"
+                    className="aspect-square rounded-xl overflow-hidden relative cursor-pointer group"
                   >
-                    <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 relative">
-                      <img src={c.img} alt={c.label} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                        <Play className="w-4 h-4 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white" />
-                      </div>
+                    <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                      <Play className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white drop-shadow-lg" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-foreground">{c.label}</p>
-                      <p className="text-xs text-muted-foreground">{c.difficulty} · {c.players} players</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
                   </div>
                 ))}
               </div>
