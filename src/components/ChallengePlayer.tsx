@@ -129,16 +129,7 @@ const ChallengePlayer = ({
   // Overlay text content (rendered centered over the seam)
   const renderOverlayText = () => {
     if (phase === "countdown") {
-      return (
-        <div className="flex flex-col items-center gap-2 animate-fade-in">
-          <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full">
-            Get ready…
-          </span>
-          <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
-            {countdown}
-          </span>
-        </div>
-      );
+      return null; // handled separately with split positioning
     }
     if (phase === "active") {
       return (
@@ -170,7 +161,7 @@ const ChallengePlayer = ({
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
       {/* Top nav — clean TikTok style, no pill backgrounds */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-[env(safe-area-inset-top,20px)] pb-2">
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-[env(safe-area-inset-top,28px)] pb-2">
         <button onClick={onHome} className="active:scale-90 transition-transform">
           <Home className="w-6 h-6 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
@@ -186,8 +177,24 @@ const ChallengePlayer = ({
         />
       )}
 
-      {/* Centered overlay text (countdown / timer / result) */}
-      {(phase === "countdown" || phase === "active" || phase === "result") && (
+      {/* Countdown: label on top half, number on bottom half */}
+      {phase === "countdown" && (
+        <>
+          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-center justify-center pointer-events-none">
+            <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
+              Get ready…
+            </span>
+          </div>
+          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-center justify-center pointer-events-none">
+            <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in">
+              {countdown}
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Active / Result overlay text — centered */}
+      {(phase === "active" || phase === "result") && (
         <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
           {renderOverlayText()}
         </div>
