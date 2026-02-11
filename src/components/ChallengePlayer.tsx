@@ -161,7 +161,7 @@ const ChallengePlayer = ({
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
       {/* Top nav — clean TikTok style, no pill backgrounds */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-6 pb-2">
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 pt-3 pb-2">
         <button onClick={onHome} className="active:scale-90 transition-transform">
           <Home className="w-6 h-6 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
