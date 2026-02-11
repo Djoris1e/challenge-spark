@@ -172,7 +172,7 @@ const ChallengePlayer = ({
       {phase === "countdown" && (
         <>
           <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
-            <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
+            <span className="bg-black/70 backdrop-blur-md text-foreground text-base font-bold tracking-widest uppercase px-5 py-2 rounded-full animate-fade-in shadow-lg" style={{ textShadow: "0 2px 8px rgba(0,0,0,.6)" }}>
               Get ready…
             </span>
           </div>
@@ -188,7 +188,7 @@ const ChallengePlayer = ({
       {phase === "active" && (
         <>
           <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
-            <span className="bg-black/60 backdrop-blur-sm text-primary text-sm font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
+            <span className="bg-black/70 backdrop-blur-md text-primary text-base font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full shadow-lg" style={{ textShadow: "0 2px 8px rgba(0,0,0,.6)" }}>
               Try not to laugh
             </span>
           </div>
