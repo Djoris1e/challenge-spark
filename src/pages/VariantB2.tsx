@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import CreateFlow from "@/components/CreateFlow";
+import ChallengePlayer from "@/components/ChallengePlayer";
 import challengeFeatured from "@/assets/challenge-featured.jpg";
 import challengeCats from "@/assets/challenge-cats.jpg";
 import challengeFails from "@/assets/challenge-fails.jpg";
@@ -17,8 +18,30 @@ const challenges = [
   { id: 6, img: challengeFeatured, players: "3.1M", survival: "9%" },
 ];
 
+const allChallenges = [
+  { img: challengeFeatured, funnyImg: challengeMemes },
+  ...challenges.map((c) => ({ img: c.img, funnyImg: challengeFeatured })),
+];
+
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
+  const [activeChallenge, setActiveChallenge] = useState<number | null>(null);
+
+  if (activeChallenge !== null) {
+    const ch = allChallenges[activeChallenge % allChallenges.length];
+    return (
+      <ChallengePlayer
+        challengeImage={ch.img}
+        funnyImage={ch.funnyImg}
+        onHome={() => setActiveChallenge(null)}
+        onCreate={() => {
+          setActiveChallenge(null);
+          setActiveTab("create");
+        }}
+        onNext={() => setActiveChallenge((i) => (i ?? 0) + 1)}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
@@ -70,7 +93,7 @@ const VariantB2 = () => {
         {activeTab === "try" ? (
           <div className="space-y-5">
             {/* Featured challenge */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden cursor-pointer hover:border-primary/40 transition-colors">
+            <div className="bg-card border border-border rounded-2xl overflow-hidden cursor-pointer hover:border-primary/40 transition-colors" onClick={() => setActiveChallenge(0)}>
               <div className="aspect-[16/9] relative overflow-hidden">
                 <img src={challengeFeatured} alt="Try Not to Laugh" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
@@ -95,9 +118,10 @@ const VariantB2 = () => {
                 More challenges
               </p>
               <div className="grid grid-cols-2 gap-2.5">
-                {challenges.map((c) => (
+                {challenges.map((c, i) => (
                   <div
                     key={c.id}
+                    onClick={() => setActiveChallenge(i + 1)}
                     className="aspect-[3/4] rounded-xl overflow-hidden relative cursor-pointer group"
                   >
                     <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
