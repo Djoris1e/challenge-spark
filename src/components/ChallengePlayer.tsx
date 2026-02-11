@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Home, Plus, RotateCcw, Download, Share2, ChevronDown, Play } from "lucide-react";
+import { Home, Plus, RotateCcw, Download, Share2, ChevronDown, Play, Heart, MessageCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 type Phase = "countdown" | "active" | "result" | "review";
@@ -169,13 +169,13 @@ const ChallengePlayer = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
-      {/* Top nav */}
-      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] pb-2">
-        <button onClick={onHome} className="p-2 rounded-full bg-black/40 backdrop-blur-md">
-          <Home className="w-5 h-5 text-foreground" />
+      {/* Top nav — clean TikTok style, no pill backgrounds */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,14px)] pb-2">
+        <button onClick={onHome} className="active:scale-90 transition-transform">
+          <Home className="w-6 h-6 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
-        <button onClick={onCreate} className="p-2 rounded-full bg-black/40 backdrop-blur-md">
-          <Plus className="w-5 h-5 text-foreground" />
+        <button onClick={onCreate} className="active:scale-90 transition-transform">
+          <Plus className="w-7 h-7 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.5)]" />
         </button>
       </div>
 
@@ -242,19 +242,19 @@ const ChallengePlayer = ({
         )}
       </div>
 
-      {/* Right-side TikTok-style action buttons */}
+      {/* Right-side TikTok-style action buttons — always visible in review */}
       {phase === "review" && (
-        <div className="absolute right-3 bottom-28 z-20 flex flex-col items-center gap-4">
+        <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-5">
           {[
+            { icon: Heart, label: "Like", action: () => toast({ title: "Liked! ❤️" }) },
+            { icon: MessageCircle, label: "Comment", action: () => {} },
             { icon: RotateCcw, label: "Again", action: handleRestart },
-            { icon: Download, label: "Save", action: handleSave },
             { icon: Share2, label: "Share", action: handleShare },
+            { icon: Download, label: "Save", action: handleSave },
           ].map(({ icon: Icon, label, action }) => (
-            <button key={label} onClick={action} className="flex flex-col items-center gap-1 group">
-              <div className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/10 backdrop-blur-md group-active:scale-90 transition-transform">
-                <Icon className="w-[22px] h-[22px] text-foreground" />
-              </div>
-              <span className="text-[10px] text-foreground/70 font-semibold">{label}</span>
+            <button key={label} onClick={action} className="flex flex-col items-center gap-1 group active:scale-90 transition-transform">
+              <Icon className="w-7 h-7 text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,.4)]" />
+              <span className="text-[10px] text-foreground font-medium drop-shadow-[0_1px_2px_rgba(0,0,0,.5)]">{label}</span>
             </button>
           ))}
         </div>
