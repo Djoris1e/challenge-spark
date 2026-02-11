@@ -118,15 +118,15 @@ const ChallengePlayer = ({
         ? "bg-green-500/30"
         : "";
 
-  // Divider content
-  const renderDivider = () => {
+  // Overlay text content (rendered centered over the seam)
+  const renderOverlayText = () => {
     if (phase === "countdown") {
       return (
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-muted-foreground text-sm font-medium tracking-wide uppercase">
+        <div className="flex flex-col items-center gap-1 animate-fade-in">
+          <span className="text-foreground/70 text-xs font-semibold tracking-widest uppercase">
             Get ready…
           </span>
-          <span className="text-5xl font-black text-foreground tabular-nums drop-shadow-lg">
+          <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
             {countdown}
           </span>
         </div>
@@ -135,10 +135,10 @@ const ChallengePlayer = ({
     if (phase === "active") {
       return (
         <div className="flex flex-col items-center gap-1">
-          <span className="text-primary text-sm font-bold uppercase tracking-widest">
+          <span className="text-primary text-xs font-bold uppercase tracking-[0.2em]">
             Try not to laugh
           </span>
-          <span className="text-4xl font-black text-foreground tabular-nums">
+          <span className="text-5xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
             0:{timer.toString().padStart(2, "0")}
           </span>
         </div>
@@ -147,19 +147,12 @@ const ChallengePlayer = ({
     if (phase === "result") {
       return (
         <span
-          className={`text-4xl font-black uppercase tracking-wider drop-shadow-lg ${
+          className={`text-5xl font-black uppercase tracking-wider animate-scale-in ${
             result === "caught" ? "text-destructive" : "text-green-400"
           }`}
-          style={{ textShadow: "0 2px 20px rgba(0,0,0,.6)" }}
+          style={{ textShadow: "0 4px 30px rgba(0,0,0,.7)" }}
         >
           {result === "caught" ? "CAUGHT! 😂" : "YOU WON! 🏆"}
-        </span>
-      );
-    }
-    if (phase === "review") {
-      return (
-        <span className="text-muted-foreground text-sm font-medium">
-          Challenge complete
         </span>
       );
     }
@@ -167,13 +160,13 @@ const ChallengePlayer = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background flex flex-col h-screen overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black flex flex-col h-screen overflow-hidden">
       {/* Top nav */}
-      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] pb-2">
-        <button onClick={onHome} className="p-2 rounded-full bg-secondary/60 backdrop-blur-sm">
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 pt-[env(safe-area-inset-top,12px)] pb-2">
+        <button onClick={onHome} className="p-2 rounded-full bg-black/40 backdrop-blur-md">
           <Home className="w-5 h-5 text-foreground" />
         </button>
-        <button onClick={onCreate} className="p-2 rounded-full bg-secondary/60 backdrop-blur-sm">
+        <button onClick={onCreate} className="p-2 rounded-full bg-black/40 backdrop-blur-md">
           <Plus className="w-5 h-5 text-foreground" />
         </button>
       </div>
@@ -185,6 +178,13 @@ const ChallengePlayer = ({
         />
       )}
 
+      {/* Centered overlay text (countdown / timer / result) */}
+      {(phase === "countdown" || phase === "active" || phase === "result") && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+          {renderOverlayText()}
+        </div>
+      )}
+
       {/* Top half — challenge image */}
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <img
@@ -193,24 +193,22 @@ const ChallengePlayer = ({
           className="w-full h-full object-cover"
         />
         {phase === "review" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-            <div className="bg-foreground/20 backdrop-blur-sm rounded-full p-4">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50">
+            <div className="bg-foreground/20 backdrop-blur-md rounded-full p-5">
               <Play className="w-10 h-10 text-foreground fill-foreground" />
             </div>
-            <span className="text-foreground text-xs mt-2 font-medium">
+            <span className="text-foreground text-xs mt-3 font-medium tracking-wide">
               Watch recording
             </span>
           </div>
         )}
       </div>
 
-      {/* Divider strip */}
-      <div className="relative z-10 flex items-center justify-center h-14 bg-card border-y border-border shrink-0">
-        {renderDivider()}
-      </div>
+      {/* Thin seam line */}
+      <div className="h-[2px] bg-foreground/10 shrink-0 relative z-10" />
 
       {/* Bottom half — webcam */}
-      <div className="relative flex-1 min-h-0 overflow-hidden bg-black">
+      <div className="relative flex-1 min-h-0 overflow-hidden">
         <video
           ref={videoRef}
           autoPlay
@@ -223,43 +221,37 @@ const ChallengePlayer = ({
         {phase === "active" && (
           <button
             onClick={handleLaughed}
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 z-20 flex items-end justify-center pb-20"
           >
-            <span className="bg-destructive/80 text-destructive-foreground px-6 py-3 rounded-2xl text-sm font-bold backdrop-blur-sm animate-pulse">
+            <span className="bg-destructive/90 text-destructive-foreground px-8 py-3.5 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
               😂 I laughed!
             </span>
           </button>
         )}
       </div>
 
-      {/* Right-side action buttons (review phase) */}
+      {/* Right-side TikTok-style action buttons */}
       {phase === "review" && (
-        <div className="absolute right-3 bottom-24 z-20 flex flex-col items-center gap-5">
-          <button onClick={handleRestart} className="flex flex-col items-center gap-1">
-            <div className="bg-secondary/80 backdrop-blur-sm rounded-full p-3">
-              <RotateCcw className="w-5 h-5 text-foreground" />
-            </div>
-            <span className="text-[10px] text-muted-foreground font-medium">Again</span>
-          </button>
-          <button onClick={handleSave} className="flex flex-col items-center gap-1">
-            <div className="bg-secondary/80 backdrop-blur-sm rounded-full p-3">
-              <Download className="w-5 h-5 text-foreground" />
-            </div>
-            <span className="text-[10px] text-muted-foreground font-medium">Save</span>
-          </button>
-          <button onClick={handleShare} className="flex flex-col items-center gap-1">
-            <div className="bg-secondary/80 backdrop-blur-sm rounded-full p-3">
-              <Share2 className="w-5 h-5 text-foreground" />
-            </div>
-            <span className="text-[10px] text-muted-foreground font-medium">Share</span>
-          </button>
+        <div className="absolute right-3 bottom-28 z-20 flex flex-col items-center gap-4">
+          {[
+            { icon: RotateCcw, label: "Again", action: handleRestart },
+            { icon: Download, label: "Save", action: handleSave },
+            { icon: Share2, label: "Share", action: handleShare },
+          ].map(({ icon: Icon, label, action }) => (
+            <button key={label} onClick={action} className="flex flex-col items-center gap-1 group">
+              <div className="w-11 h-11 flex items-center justify-center rounded-full bg-foreground/10 backdrop-blur-md group-active:scale-90 transition-transform">
+                <Icon className="w-[22px] h-[22px] text-foreground" />
+              </div>
+              <span className="text-[10px] text-foreground/70 font-semibold">{label}</span>
+            </button>
+          ))}
         </div>
       )}
 
-      {/* Next button — always visible */}
+      {/* Next button — always visible, bottom-right */}
       <button
         onClick={onNext}
-        className="absolute bottom-6 right-3 z-20 bg-primary rounded-full p-3 shadow-lg"
+        className="absolute bottom-6 right-3 z-20 bg-primary rounded-full w-12 h-12 flex items-center justify-center shadow-lg active:scale-90 transition-transform"
       >
         <ChevronDown className="w-5 h-5 text-primary-foreground" />
       </button>
