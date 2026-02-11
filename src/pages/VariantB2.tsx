@@ -11,11 +11,12 @@ import challengeAnimals from "@/assets/challenge-animals.jpg";
 import challengeMemes from "@/assets/challenge-memes.jpg";
 
 const challenges = [
-  { id: 1, img: challengeCats },
-  { id: 2, img: challengeFails },
-  { id: 3, img: challengeDadjokes },
-  { id: 4, img: challengeAnimals },
-  { id: 5, img: challengeMemes },
+  { id: 1, img: challengeCats, players: "1.2M", survival: "31%" },
+  { id: 2, img: challengeFails, players: "890K", survival: "18%" },
+  { id: 3, img: challengeDadjokes, players: "670K", survival: "42%" },
+  { id: 4, img: challengeAnimals, players: "2.3M", survival: "27%" },
+  { id: 5, img: challengeMemes, players: "540K", survival: "12%" },
+  { id: 6, img: challengeFeatured, players: "3.1M", survival: "9%" },
 ];
 
 const VariantB2 = () => {
@@ -95,15 +96,23 @@ const VariantB2 = () => {
               <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-3">
                 More challenges
               </p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 gap-2.5">
                 {challenges.map((c) => (
                   <div
                     key={c.id}
-                    className="aspect-square rounded-xl overflow-hidden relative cursor-pointer group"
+                    className="aspect-[3/4] rounded-xl overflow-hidden relative cursor-pointer group"
                   >
                     <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                      <Play className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white drop-shadow-lg" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                      <Play className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white drop-shadow-lg" />
+                    </div>
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                      <div className="flex items-center gap-1.5 text-white/90">
+                        <Play className="w-3 h-3 fill-white/90" />
+                        <span className="text-xs font-semibold">{c.players}</span>
+                      </div>
+                      <p className="text-[10px] text-white/60 mt-0.5">{c.survival} survival</p>
                     </div>
                   </div>
                 ))}
