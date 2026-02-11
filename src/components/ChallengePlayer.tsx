@@ -243,16 +243,12 @@ const ChallengePlayer = ({
           className="w-full h-full object-cover -scale-x-100"
         />
 
-        {/* "I laughed" tap zone during active phase */}
+        {/* Invisible tap zone during active phase — tapping anywhere triggers "caught" */}
         {phase === "active" && (
           <button
             onClick={handleLaughed}
-            className="absolute inset-0 z-20 flex items-end justify-center pb-20"
-          >
-            <span className="bg-destructive/90 text-destructive-foreground px-8 py-3.5 rounded-full text-sm font-bold backdrop-blur-sm shadow-lg">
-              😂 I laughed!
-            </span>
-          </button>
+            className="absolute inset-0 z-20"
+          />
         )}
       </div>
 
