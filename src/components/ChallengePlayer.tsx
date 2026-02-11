@@ -171,12 +171,12 @@ const ChallengePlayer = ({
       {/* Countdown: label at bottom of top photo, number at top of bottom photo */}
       {phase === "countdown" && (
         <>
-          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
+           <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-2 pointer-events-none">
             <span className="bg-black/70 backdrop-blur-md text-foreground text-base font-bold tracking-widest uppercase px-5 py-2 rounded-full animate-fade-in shadow-lg" style={{ textShadow: "0 2px 8px rgba(0,0,0,.6)" }}>
               Get ready…
             </span>
           </div>
-          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-4 pointer-events-none">
+          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-2 pointer-events-none">
             <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in">
               {countdown}
             </span>
@@ -187,12 +187,12 @@ const ChallengePlayer = ({
       {/* Active: label at bottom of top photo, timer at top of bottom photo */}
       {phase === "active" && (
         <>
-          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
+          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-2 pointer-events-none">
             <span className="bg-black/70 backdrop-blur-md text-primary text-base font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full shadow-lg" style={{ textShadow: "0 2px 8px rgba(0,0,0,.6)" }}>
               Try not to laugh
             </span>
           </div>
-          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-4 pointer-events-none">
+          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-2 pointer-events-none">
             <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
               0:{timer.toString().padStart(2, "0")}
             </span>
