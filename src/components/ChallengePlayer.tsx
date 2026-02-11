@@ -10,6 +10,7 @@ interface ChallengePlayerProps {
   onHome: () => void;
   onCreate: () => void;
   onNext: () => void;
+  forceResult?: "caught" | "survived" | null;
 }
 
 const ChallengePlayer = ({
@@ -18,6 +19,7 @@ const ChallengePlayer = ({
   onHome,
   onCreate,
   onNext,
+  forceResult,
 }: ChallengePlayerProps) => {
   const [phase, setPhase] = useState<Phase>("countdown");
   const [countdown, setCountdown] = useState(5);
@@ -54,12 +56,18 @@ const ChallengePlayer = ({
   useEffect(() => {
     if (phase !== "countdown") return;
     if (countdown <= 0) {
-      setPhase("active");
+      // If forceResult, skip active and go straight to result
+      if (forceResult) {
+        setResult(forceResult);
+        setPhase("result");
+      } else {
+        setPhase("active");
+      }
       return;
     }
     const id = setTimeout(() => setCountdown((c) => c - 1), 1000);
     return () => clearTimeout(id);
-  }, [phase, countdown]);
+  }, [phase, countdown, forceResult]);
 
   // Active phase
   useEffect(() => {
@@ -110,11 +118,11 @@ const ChallengePlayer = ({
   const topImage =
     phase === "countdown" || phase === "review" ? challengeImage : funnyImage;
 
-  // Overlay color
+  // Overlay color — persist into review phase too
   const overlayClass =
-    phase === "result" && result === "caught"
+    (phase === "result" || phase === "review") && result === "caught"
       ? "bg-destructive/30"
-      : phase === "result" && result === "survived"
+      : (phase === "result" || phase === "review") && result === "survived"
         ? "bg-green-500/30"
         : "";
 
@@ -122,11 +130,11 @@ const ChallengePlayer = ({
   const renderOverlayText = () => {
     if (phase === "countdown") {
       return (
-        <div className="flex flex-col items-center gap-1 animate-fade-in">
-          <span className="text-foreground/70 text-xs font-semibold tracking-widest uppercase">
+        <div className="flex flex-col items-center gap-2 animate-fade-in">
+          <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full">
             Get ready…
           </span>
-          <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
+          <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
             {countdown}
           </span>
         </div>
@@ -134,11 +142,11 @@ const ChallengePlayer = ({
     }
     if (phase === "active") {
       return (
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-primary text-xs font-bold uppercase tracking-[0.2em]">
+        <div className="flex flex-col items-center gap-2">
+          <span className="bg-black/60 backdrop-blur-sm text-primary text-sm font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
             Try not to laugh
           </span>
-          <span className="text-5xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
+          <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
             0:{timer.toString().padStart(2, "0")}
           </span>
         </div>
@@ -171,8 +179,8 @@ const ChallengePlayer = ({
         </button>
       </div>
 
-      {/* Result overlay */}
-      {phase === "result" && (
+      {/* Result overlay — persists into review */}
+      {(phase === "result" || phase === "review") && result && (
         <div
           className={`absolute inset-0 z-10 transition-opacity duration-500 ${overlayClass}`}
         />
@@ -185,6 +193,20 @@ const ChallengePlayer = ({
         </div>
       )}
 
+      {/* Watch recording — centered on full screen during review */}
+      {phase === "review" && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pointer-events-none">
+          <button className="pointer-events-auto flex flex-col items-center gap-2 group">
+            <div className="bg-black/50 backdrop-blur-md rounded-full p-5 group-active:scale-90 transition-transform">
+              <Play className="w-12 h-12 text-foreground fill-foreground" />
+            </div>
+            <span className="bg-black/50 backdrop-blur-sm text-foreground text-sm font-semibold px-4 py-1.5 rounded-full">
+              Watch your recording
+            </span>
+          </button>
+        </div>
+      )}
+
       {/* Top half — challenge image */}
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <img
@@ -192,16 +214,6 @@ const ChallengePlayer = ({
           alt="Challenge"
           className="w-full h-full object-cover"
         />
-        {phase === "review" && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50">
-            <div className="bg-foreground/20 backdrop-blur-md rounded-full p-5">
-              <Play className="w-10 h-10 text-foreground fill-foreground" />
-            </div>
-            <span className="text-foreground text-xs mt-3 font-medium tracking-wide">
-              Watch recording
-            </span>
-          </div>
-        )}
       </div>
 
       {/* Thin seam line */}

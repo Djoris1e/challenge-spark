@@ -29,6 +29,10 @@ const VariantB2 = () => {
 
   if (activeChallenge !== null) {
     const ch = allChallenges[activeChallenge % allChallenges.length];
+    // First card forces "caught", second forces "survived" for testing
+    const forceResult =
+      activeChallenge === 0 ? "caught" as const :
+      activeChallenge === 1 ? "survived" as const : undefined;
     return (
       <ChallengePlayer
         challengeImage={ch.img}
@@ -39,6 +43,7 @@ const VariantB2 = () => {
           setActiveTab("create");
         }}
         onNext={() => setActiveChallenge((i) => (i ?? 0) + 1)}
+        forceResult={forceResult}
       />
     );
   }
