@@ -1,8 +1,6 @@
-import { useState, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Play, Camera, X } from "lucide-react";
+import { useState } from "react";
+import { Play } from "lucide-react";
+import CreateFlow from "@/components/CreateFlow";
 import challengeFeatured from "@/assets/challenge-featured.jpg";
 import challengeCats from "@/assets/challenge-cats.jpg";
 import challengeFails from "@/assets/challenge-fails.jpg";
@@ -127,117 +125,6 @@ const VariantB2 = () => {
       {/* Footer */}
       <div className="py-6 text-center">
         <p className="text-xs text-muted-foreground">Terms · Privacy</p>
-      </div>
-    </div>
-  );
-};
-
-const suggestions = ["Bromance Kiss", "Triple Threat", "Bar Buddies Wedding", "Putin Crash", "Fart Cloud"];
-
-const CreateFlow = () => {
-  const [photo, setPhoto] = useState<string | null>(null);
-  const [prompt, setPrompt] = useState("");
-  const [hasPermission, setHasPermission] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => setPhoto(ev.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  return (
-    <div className="space-y-5">
-      <div className="text-center space-y-1.5">
-        <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Your friends see the normal photo first, then the AI version. Try not to laugh!
-        </p>
-      </div>
-
-      {/* Step 1 — Photo upload */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2.5">
-          <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shrink-0">1</span>
-          <span className="text-xs font-bold uppercase tracking-wider text-foreground">Take or upload a photo</span>
-        </div>
-
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-
-        {!photo ? (
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="w-full aspect-square rounded-2xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
-          >
-            <Camera className="w-10 h-10 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Tap to take or upload photo</span>
-          </button>
-        ) : (
-          <div className="space-y-2">
-            <div className="relative rounded-2xl overflow-hidden">
-              <img src={photo} alt="Uploaded" className="w-full object-cover rounded-2xl" />
-              <button
-                onClick={() => { setPhoto(null); setPrompt(""); }}
-                className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
-            </div>
-            <button onClick={() => fileRef.current?.click()} className="text-sm text-primary font-medium w-full text-center">
-              Change photo
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Step 2 — Prompt (visible after photo) */}
-      {photo && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shrink-0">2</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-foreground">Describe the punchline</span>
-          </div>
-
-          <Textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g. add Vladimir Putin standing behind them with his arms around all three men"
-            className="bg-secondary border-border rounded-xl resize-none min-h-[80px] text-sm"
-          />
-
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Suggestions</p>
-            <div className="flex flex-wrap gap-2">
-              {suggestions.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setPrompt(s)}
-                  className="px-3 py-1.5 rounded-full bg-secondary text-xs text-foreground font-medium hover:bg-secondary/80 transition-colors border border-border"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Permission + CTA */}
-      <div className="space-y-4 pt-1">
-        <label className="flex items-center gap-2.5 cursor-pointer">
-          <Checkbox checked={hasPermission} onCheckedChange={(v) => setHasPermission(v === true)} />
-          <span className="text-sm text-muted-foreground">I have permission to use this photo</span>
-        </label>
-
-        <Button
-          disabled={!photo || !hasPermission}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-40"
-        >
-          Transform with AI
-        </Button>
       </div>
     </div>
   );
