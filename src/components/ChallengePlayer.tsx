@@ -132,16 +132,7 @@ const ChallengePlayer = ({
       return null; // handled separately with split positioning
     }
     if (phase === "active") {
-      return (
-        <div className="flex flex-col items-center gap-2">
-          <span className="bg-black/60 backdrop-blur-sm text-primary text-sm font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
-            Try not to laugh
-          </span>
-          <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
-            0:{timer.toString().padStart(2, "0")}
-          </span>
-        </div>
-      );
+      return null; // handled separately with split positioning
     }
     if (phase === "result") {
       return (
@@ -177,21 +168,41 @@ const ChallengePlayer = ({
         />
       )}
 
-      {/* Countdown: label + number stacked together, centered on screen */}
+      {/* Countdown: label at bottom of top photo, number at top of bottom photo */}
       {phase === "countdown" && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center pointer-events-none" style={{ justifyContent: "center", paddingTop: "10%" }}>
-          <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
-            Get ready…
-          </span>
-          <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in mt-3">
-            {countdown}
-          </span>
-        </div>
+        <>
+          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
+            <span className="bg-black/60 backdrop-blur-sm text-foreground text-sm font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full animate-fade-in">
+              Get ready…
+            </span>
+          </div>
+          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-4 pointer-events-none">
+            <span className="text-7xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)] animate-fade-in">
+              {countdown}
+            </span>
+          </div>
+        </>
       )}
 
-      {/* Active / Result overlay text — centered */}
-      {(phase === "active" || phase === "result") && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none" style={{ paddingTop: "10%" }}>
+      {/* Active: label at bottom of top photo, timer at top of bottom photo */}
+      {phase === "active" && (
+        <>
+          <div className="absolute top-0 left-0 right-0 bottom-1/2 z-20 flex items-end justify-center pb-4 pointer-events-none">
+            <span className="bg-black/60 backdrop-blur-sm text-primary text-sm font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
+              Try not to laugh
+            </span>
+          </div>
+          <div className="absolute top-1/2 left-0 right-0 bottom-0 z-20 flex items-start justify-center pt-4 pointer-events-none">
+            <span className="text-6xl font-black text-foreground tabular-nums drop-shadow-[0_4px_24px_rgba(0,0,0,.8)]">
+              0:{timer.toString().padStart(2, "0")}
+            </span>
+          </div>
+        </>
+      )}
+
+      {/* Result overlay text — centered */}
+      {phase === "result" && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
           {renderOverlayText()}
         </div>
       )}
