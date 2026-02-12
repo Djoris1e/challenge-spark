@@ -2,12 +2,25 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal } from "lucide-react";
+import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 type Step = "create" | "preview" | "published";
 
-const suggestions = ["Bromance Kiss", "Triple Threat", "Bar Buddies Wedding", "Putin Crash", "Fart Cloud"];
+const suggestions = [
+  { id: "bromance", emoji: "💋", title: "Trump Kiss", desc: "Another smooch" },
+  { id: "horse", emoji: "🐴", title: "Horse Love", desc: "Making out with a horse" },
+  { id: "selflove", emoji: "🤳", title: "Self Love", desc: "Kissing yourself" },
+  { id: "stranger", emoji: "😳", title: "Wrong Person", desc: "Accidentally kiss a stranger" },
+  { id: "niccage", emoji: "⭐", title: "Nic Cage", desc: "Nicolas Cage appears" },
+  { id: "flavortown", emoji: "⭐", title: "Flavortown", desc: "Guy Fieri takes you to Flavortown" },
+  { id: "postmalone", emoji: "⭐", title: "Post Malone'd", desc: "Face tattoos included" },
+  { id: "tigerking", emoji: "🐯", title: "Tiger King", desc: "Joe Exotic vibes" },
+  { id: "carry", emoji: "🏋️", title: "Carry Me", desc: "He carries the other" },
+  { id: "fight", emoji: "🥊", title: "Fight Night", desc: "Boxing match" },
+  { id: "family", emoji: "👨‍👩‍👧‍👦", title: "Family Photo", desc: "Awkward matching sweaters" },
+  { id: "arrest", emoji: "👮", title: "Under Arrest", desc: "Cop and criminal" },
+];
 
 const CreateFlow = () => {
   const [step, setStep] = useState<Step>("create");
@@ -196,88 +209,82 @@ const CreateFlow = () => {
         </p>
       </div>
 
-      {/* Step 1 — Photo upload */}
-      <div className="space-y-3">
-        <div className="flex items-center gap-2.5">
-          <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shrink-0">1</span>
-          <span className="text-xs font-bold uppercase tracking-wider text-foreground">Take or upload a photo</span>
-        </div>
-
+      {/* Photo upload */}
+      <div className="space-y-2">
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
 
         {!photo ? (
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full aspect-square rounded-2xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
+            className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
           >
             <Camera className="w-10 h-10 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">Tap to take or upload photo</span>
           </button>
         ) : (
-          <div className="space-y-2">
-            <div className="relative rounded-2xl overflow-hidden">
-              <img src={photo} alt="Uploaded" className="w-full object-cover rounded-2xl" />
-              <button
-                onClick={() => { setPhoto(null); setPrompt(""); }}
-                className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
-              >
-                <X className="w-4 h-4 text-white" />
-              </button>
-            </div>
-            <button onClick={() => fileRef.current?.click()} className="text-sm text-primary font-medium w-full text-center">
-              Change photo
+          <div className="relative rounded-2xl overflow-hidden">
+            <img src={photo} alt="Uploaded" className="w-full rounded-2xl" />
+            <button
+              onClick={() => { setPhoto(null); setPrompt(""); }}
+              className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
+            >
+              <X className="w-4 h-4 text-white" />
+            </button>
+            <button onClick={() => fileRef.current?.click()} className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
+              Change
             </button>
           </div>
         )}
       </div>
 
-      {/* Step 2 — Prompt */}
-      {photo && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shrink-0">2</span>
-            <span className="text-xs font-bold uppercase tracking-wider text-foreground">Describe the punchline</span>
-          </div>
-
-          <Textarea
-            value={prompt}
-            onChange={(e) => setPrompt(e.target.value)}
-            placeholder="e.g. add Vladimir Putin standing behind them with his arms around all three men"
-            className="bg-secondary border-border rounded-xl resize-none min-h-[80px] text-sm"
-          />
-
-          <div className="space-y-2">
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Suggestions</p>
-            <div className="flex flex-wrap gap-2">
-              {suggestions.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setPrompt(s)}
-                  className="px-3 py-1.5 rounded-full bg-secondary text-xs text-foreground font-medium hover:bg-secondary/80 transition-colors border border-border"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Permission + CTA */}
-      <div className="space-y-4 pt-1">
-        <label className="flex items-center gap-2.5 cursor-pointer">
-          <Checkbox checked={hasPermission} onCheckedChange={(v) => setHasPermission(v === true)} />
-          <span className="text-sm text-muted-foreground">I have permission to use this photo</span>
-        </label>
-
-        <Button
-          disabled={!photo || !hasPermission}
+      {/* Prompt input with integrated send */}
+      <div className="relative">
+        <Textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Describe the punchline…"
+          className="bg-secondary border-border rounded-xl resize-none min-h-[48px] max-h-[100px] text-sm pr-12 py-3"
+          rows={1}
+        />
+        <button
+          disabled={!photo || !prompt.trim()}
           onClick={handleTransform}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-40"
+          className="absolute right-2 bottom-2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-30 transition-opacity"
         >
-          Transform with AI
-        </Button>
+          <Send className="w-4 h-4" />
+        </button>
       </div>
+
+      {/* Suggestion thumbnails grid */}
+      <div className="space-y-3">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Or pick a punchline</p>
+        <div className="grid grid-cols-4 gap-3">
+          {suggestions.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => {
+                setPrompt(s.title);
+                if (photo) handleTransform();
+              }}
+              className="flex flex-col items-center gap-1.5 group"
+            >
+              <div className="w-full aspect-square rounded-xl bg-secondary border border-border flex items-center justify-center text-2xl group-hover:border-primary/50 transition-colors">
+                {s.emoji}
+              </div>
+              <div className="text-center">
+                <p className="text-[11px] font-semibold text-foreground leading-tight truncate w-full">{s.title}</p>
+                <p className="text-[9px] text-muted-foreground leading-tight truncate w-full">{s.desc}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Permission checkbox — subtle at bottom */}
+      <label className="flex items-center gap-2.5 cursor-pointer pt-1">
+        <Checkbox checked={hasPermission} onCheckedChange={(v) => setHasPermission(v === true)} />
+        <span className="text-xs text-muted-foreground">I have permission to use this photo</span>
+      </label>
     </div>
   );
 };
