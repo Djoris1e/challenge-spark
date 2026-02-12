@@ -243,10 +243,10 @@ const CreateFlow = () => {
         {!photo ? (
           <button
             onClick={() => fileRef.current?.click()}
-            className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
+            className="w-full h-32 rounded-2xl border-2 border-dashed border-primary/40 bg-card flex items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
           >
-            <Camera className="w-10 h-10 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Tap to take or upload photo</span>
+            <Camera className="w-6 h-6 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">Take or upload a photo</span>
           </button>
         ) : (
           <div className="relative rounded-2xl overflow-hidden">
@@ -284,7 +284,7 @@ const CreateFlow = () => {
 
       {/* Suggestion thumbnails grouped by category */}
       <div className="space-y-5">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Or pick a punchline</p>
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pick a funny prompt</p>
         {suggestionGroups.map((group) => (
           <div key={group.title} className="space-y-2.5">
             <p className="text-sm font-bold text-foreground">{group.title}</p>
