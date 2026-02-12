@@ -1,32 +1,59 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
+import promptBromance from "@/assets/prompt-bromance.jpg";
+import promptHorse from "@/assets/prompt-horse.jpg";
+import promptSelflove from "@/assets/prompt-selflove.jpg";
+import promptNiccage from "@/assets/prompt-niccage.jpg";
+import promptFlavortown from "@/assets/prompt-flavortown.jpg";
+import promptPostmalone from "@/assets/prompt-postmalone.jpg";
+import promptTigerking from "@/assets/prompt-tigerking.jpg";
+import promptGiantnose from "@/assets/prompt-giantnose.jpg";
+import promptWonkyeye from "@/assets/prompt-wonkyeye.jpg";
+import promptFivehead from "@/assets/prompt-fivehead.jpg";
+import promptNoteeth from "@/assets/prompt-noteeth.jpg";
+import promptNobrows from "@/assets/prompt-nobrows.jpg";
+
 type Step = "create" | "preview" | "published";
 
-const suggestions = [
-  { id: "bromance", emoji: "💋", title: "Trump Kiss", desc: "Another smooch" },
-  { id: "horse", emoji: "🐴", title: "Horse Love", desc: "Making out with a horse" },
-  { id: "selflove", emoji: "🤳", title: "Self Love", desc: "Kissing yourself" },
-  { id: "stranger", emoji: "😳", title: "Wrong Person", desc: "Accidentally kiss a stranger" },
-  { id: "niccage", emoji: "⭐", title: "Nic Cage", desc: "Nicolas Cage appears" },
-  { id: "flavortown", emoji: "⭐", title: "Flavortown", desc: "Guy Fieri takes you to Flavortown" },
-  { id: "postmalone", emoji: "⭐", title: "Post Malone'd", desc: "Face tattoos included" },
-  { id: "tigerking", emoji: "🐯", title: "Tiger King", desc: "Joe Exotic vibes" },
-  { id: "carry", emoji: "🏋️", title: "Carry Me", desc: "He carries the other" },
-  { id: "fight", emoji: "🥊", title: "Fight Night", desc: "Boxing match" },
-  { id: "family", emoji: "👨‍👩‍👧‍👦", title: "Family Photo", desc: "Awkward matching sweaters" },
-  { id: "arrest", emoji: "👮", title: "Under Arrest", desc: "Cop and criminal" },
+const suggestionGroups = [
+  {
+    title: "Awkward Romance",
+    items: [
+      { id: "bromance", img: promptBromance, title: "Bromance Kiss" },
+      { id: "horse", img: promptHorse, title: "Horse Love" },
+      { id: "selflove", img: promptSelflove, title: "Self Love" },
+      { id: "niccage", img: promptNiccage, title: "Nic Cage Crash" },
+    ],
+  },
+  {
+    title: "Celebrity Makeover",
+    items: [
+      { id: "flavortown", img: promptFlavortown, title: "Flavortown" },
+      { id: "postmalone", img: promptPostmalone, title: "Post Malone'd" },
+      { id: "tigerking", img: promptTigerking, title: "Tiger King" },
+      { id: "nobrows", img: promptNobrows, title: "No Brows" },
+    ],
+  },
+  {
+    title: "Weird Face",
+    items: [
+      { id: "giantnose", img: promptGiantnose, title: "Giant Nose" },
+      { id: "wonkyeye", img: promptWonkyeye, title: "Wonky Eye" },
+      { id: "fivehead", img: promptFivehead, title: "Fivehead" },
+      { id: "noteeth", img: promptNoteeth, title: "No Teeth" },
+    ],
+  },
 ];
 
 const CreateFlow = () => {
   const [step, setStep] = useState<Step>("create");
   const [photo, setPhoto] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [hasPermission, setHasPermission] = useState(false);
+  
   const [transformedPhoto, setTransformedPhoto] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -57,7 +84,7 @@ const CreateFlow = () => {
   const handleCreateAnother = () => {
     setPhoto(null);
     setPrompt("");
-    setHasPermission(false);
+    
     setTransformedPhoto(null);
     setCopied(false);
     setStep("create");
@@ -255,36 +282,32 @@ const CreateFlow = () => {
         </button>
       </div>
 
-      {/* Suggestion thumbnails grid */}
-      <div className="space-y-3">
+      {/* Suggestion thumbnails grouped by category */}
+      <div className="space-y-5">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Or pick a punchline</p>
-        <div className="grid grid-cols-4 gap-3">
-          {suggestions.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => {
-                setPrompt(s.title);
-                if (photo) handleTransform();
-              }}
-              className="flex flex-col items-center gap-1.5 group"
-            >
-              <div className="w-full aspect-square rounded-xl bg-secondary border border-border flex items-center justify-center text-2xl group-hover:border-primary/50 transition-colors">
-                {s.emoji}
-              </div>
-              <div className="text-center">
-                <p className="text-[11px] font-semibold text-foreground leading-tight truncate w-full">{s.title}</p>
-                <p className="text-[9px] text-muted-foreground leading-tight truncate w-full">{s.desc}</p>
-              </div>
-            </button>
-          ))}
-        </div>
+        {suggestionGroups.map((group) => (
+          <div key={group.title} className="space-y-2.5">
+            <p className="text-sm font-bold text-foreground">{group.title}</p>
+            <div className="grid grid-cols-4 gap-3">
+              {group.items.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => {
+                    setPrompt(s.title);
+                    if (photo) handleTransform();
+                  }}
+                  className="flex flex-col items-center gap-1.5 group"
+                >
+                  <div className="w-full aspect-square rounded-xl overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
+                    <img src={s.img} alt={s.title} className="w-full h-full object-cover" />
+                  </div>
+                  <p className="text-[11px] font-medium text-foreground leading-tight truncate w-full text-center">{s.title}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
-
-      {/* Permission checkbox — subtle at bottom */}
-      <label className="flex items-center gap-2.5 cursor-pointer pt-1">
-        <Checkbox checked={hasPermission} onCheckedChange={(v) => setHasPermission(v === true)} />
-        <span className="text-xs text-muted-foreground">I have permission to use this photo</span>
-      </label>
     </div>
   );
 };
