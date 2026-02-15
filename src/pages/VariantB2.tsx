@@ -178,10 +178,10 @@ const VariantB2 = () => {
         );
       case "text":
         return (
-          <div className="flex gap-4">
+          <div className="flex gap-4 mb-2">
             <button
               onClick={() => setChallengeTab("featured")}
-              className={`text-sm pb-3 border-b-2 transition-all ${
+              className={`text-sm pb-1 border-b-2 transition-all ${
                 challengeTab === "featured"
                   ? "text-foreground font-black border-foreground"
                   : "text-muted-foreground font-medium border-transparent hover:text-foreground"
@@ -191,7 +191,7 @@ const VariantB2 = () => {
             </button>
             <button
               onClick={() => setChallengeTab("recent")}
-              className={`text-sm pb-3 border-b-2 transition-all ${
+              className={`text-sm pb-1 border-b-2 transition-all ${
                 challengeTab === "recent"
                   ? "text-foreground font-black border-foreground"
                   : "text-muted-foreground font-medium border-transparent hover:text-foreground"
