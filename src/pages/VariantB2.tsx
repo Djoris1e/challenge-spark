@@ -101,7 +101,7 @@ const VariantB2 = () => {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Play
+            🎬 Play
           </button>
           <button
             onClick={() => setActiveTab("create")}
@@ -111,7 +111,7 @@ const VariantB2 = () => {
                 : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            Create
+            ✨ Create
           </button>
         </div>
       </div>
