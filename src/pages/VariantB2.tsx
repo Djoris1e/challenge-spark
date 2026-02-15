@@ -45,10 +45,14 @@ const allChallenges = allChallengesList.map((c, i) => ({
   funnyImg: allChallengesList[(i + 3) % allChallengesList.length].img,
 }));
 
+type SwitcherStyle = "pill" | "underline" | "chips" | "dropdown";
+
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
   const [challengeTab, setChallengeTab] = useState<"featured" | "recent">("featured");
   const [activeChallenge, setActiveChallenge] = useState<number | null>(null);
+  const [switcherStyle, setSwitcherStyle] = useState<SwitcherStyle>("pill");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   if (activeChallenge !== null) {
     const ch = allChallenges[activeChallenge % allChallenges.length];
@@ -71,10 +75,128 @@ const VariantB2 = () => {
     );
   }
 
+  // Render the category switcher based on selected style
+  const renderSwitcher = () => {
+    switch (switcherStyle) {
+      case "pill":
+        return (
+          <div className="bg-muted rounded-full p-1 flex w-fit">
+            <button
+              onClick={() => setChallengeTab("featured")}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                challengeTab === "featured"
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Featured
+            </button>
+            <button
+              onClick={() => setChallengeTab("recent")}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                challengeTab === "recent"
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Recent
+            </button>
+          </div>
+        );
+      case "underline":
+        return (
+          <div className="flex gap-4 border-b border-border">
+            <button
+              onClick={() => setChallengeTab("featured")}
+              className={`text-sm font-bold pb-2 border-b-2 transition-colors -mb-px ${
+                challengeTab === "featured"
+                  ? "text-foreground border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
+            >
+              Featured
+            </button>
+            <button
+              onClick={() => setChallengeTab("recent")}
+              className={`text-sm font-bold pb-2 border-b-2 transition-colors -mb-px ${
+                challengeTab === "recent"
+                  ? "text-foreground border-primary"
+                  : "text-muted-foreground border-transparent hover:text-foreground"
+              }`}
+            >
+              Recent
+            </button>
+          </div>
+        );
+      case "chips":
+        return (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {(["featured", "recent"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setChallengeTab(tab)}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
+                  challengeTab === tab
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
+        );
+      case "dropdown":
+        return (
+          <div className="relative w-fit">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-background text-sm font-semibold text-foreground hover:bg-muted transition-colors"
+            >
+              {challengeTab === "featured" ? "Featured" : "Recent"}
+              <svg className={`w-3 h-3 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 mt-1 bg-popover border border-border rounded-lg shadow-md z-50 min-w-[120px] py-1">
+                <button
+                  onClick={() => { setChallengeTab("featured"); setDropdownOpen(false); }}
+                  className={`block w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors ${challengeTab === "featured" ? "font-bold text-foreground" : "text-muted-foreground"}`}
+                >
+                  Featured
+                </button>
+                <button
+                  onClick={() => { setChallengeTab("recent"); setDropdownOpen(false); }}
+                  className={`block w-full text-left px-3 py-2 text-sm hover:bg-muted transition-colors ${challengeTab === "recent" ? "font-bold text-foreground" : "text-muted-foreground"}`}
+                >
+                  Recent
+                </button>
+              </div>
+            )}
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
+      {/* TEMP: Style selector */}
+      <div className="px-5 pt-2 pb-1">
+        <select
+          value={switcherStyle}
+          onChange={(e) => setSwitcherStyle(e.target.value as SwitcherStyle)}
+          className="text-xs px-2 py-1 rounded border border-border bg-background text-foreground"
+        >
+          <option value="pill">Style: Pill Toggle</option>
+          <option value="underline">Style: Underline Tabs</option>
+          <option value="chips">Style: Chips</option>
+          <option value="dropdown">Style: Dropdown</option>
+        </select>
+      </div>
+
       {/* Header */}
-      <div className="pt-8 pb-2 px-5">
+      <div className="pt-4 pb-2 px-5">
         <h1 className="text-3xl font-black tracking-tighter text-foreground">
           No<span className="text-primary">LOL</span>
         </h1>
@@ -120,29 +242,8 @@ const VariantB2 = () => {
       <div className="flex-1 px-5">
         {activeTab === "try" ? (
           <div className="space-y-4">
-            {/* Featured / Recent tabs */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setChallengeTab("featured")}
-                className={`text-sm font-bold pb-1 border-b-2 transition-colors ${
-                  challengeTab === "featured"
-                    ? "text-foreground border-primary"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
-                }`}
-              >
-                Featured
-              </button>
-              <button
-                onClick={() => setChallengeTab("recent")}
-                className={`text-sm font-bold pb-1 border-b-2 transition-colors ${
-                  challengeTab === "recent"
-                    ? "text-foreground border-primary"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
-                }`}
-              >
-                Recent
-              </button>
-            </div>
+            {/* Dynamic switcher */}
+            {renderSwitcher()}
 
             {/* Challenge grid */}
             <div className="grid grid-cols-2 gap-2.5">
