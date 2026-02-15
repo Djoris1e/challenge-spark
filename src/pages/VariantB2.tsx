@@ -45,7 +45,7 @@ const allChallenges = allChallengesList.map((c, i) => ({
   funnyImg: allChallengesList[(i + 3) % allChallengesList.length].img,
 }));
 
-type SwitcherStyle = "pill" | "underline" | "chips" | "dropdown";
+type SwitcherStyle = "pill" | "underline" | "chips" | "dropdown" | "text";
 
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
@@ -176,6 +176,31 @@ const VariantB2 = () => {
             )}
           </div>
         );
+      case "text":
+        return (
+          <div className="flex gap-4">
+            <button
+              onClick={() => setChallengeTab("featured")}
+              className={`text-sm transition-colors ${
+                challengeTab === "featured"
+                  ? "text-foreground font-black"
+                  : "text-muted-foreground font-medium hover:text-foreground"
+              }`}
+            >
+              Featured
+            </button>
+            <button
+              onClick={() => setChallengeTab("recent")}
+              className={`text-sm transition-colors ${
+                challengeTab === "recent"
+                  ? "text-foreground font-black"
+                  : "text-muted-foreground font-medium hover:text-foreground"
+              }`}
+            >
+              Recent
+            </button>
+          </div>
+        );
     }
   };
 
@@ -192,6 +217,7 @@ const VariantB2 = () => {
           <option value="underline">Style: Underline Tabs</option>
           <option value="chips">Style: Chips</option>
           <option value="dropdown">Style: Dropdown</option>
+          <option value="text">Style: Bold Text</option>
         </select>
       </div>
 
