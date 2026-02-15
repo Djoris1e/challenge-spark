@@ -127,7 +127,7 @@ const VariantB2 = () => {
                   <div
                     key={c.id}
                     onClick={() => setActiveChallenge(i + 1)}
-                    className="aspect-[3/4] rounded-xl overflow-hidden relative cursor-pointer group"
+                    className="aspect-square rounded-xl overflow-hidden relative cursor-pointer group"
                   >
                     <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
