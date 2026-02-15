@@ -9,22 +9,45 @@ import challengeDadjokes from "@/assets/challenge-dadjokes.jpg";
 import challengeAnimals from "@/assets/challenge-animals.jpg";
 import challengeMemes from "@/assets/challenge-memes.jpg";
 
-const challenges = [
-  { id: 1, img: challengeCats, players: "1.2M", survival: "31%" },
-  { id: 2, img: challengeFails, players: "890K", survival: "18%" },
-  { id: 3, img: challengeDadjokes, players: "670K", survival: "42%" },
-  { id: 4, img: challengeAnimals, players: "2.3M", survival: "27%" },
-  { id: 5, img: challengeMemes, players: "540K", survival: "12%" },
-  { id: 6, img: challengeFeatured, players: "3.1M", survival: "9%" },
+const featuredChallenges = [
+  { id: 1, img: challengeFeatured, players: "3.1M", survival: "9%" },
+  { id: 2, img: challengeCats, players: "1.2M", survival: "31%" },
+  { id: 3, img: challengeFails, players: "890K", survival: "18%" },
+  { id: 4, img: challengeDadjokes, players: "670K", survival: "42%" },
+  { id: 5, img: challengeAnimals, players: "2.3M", survival: "27%" },
+  { id: 6, img: challengeMemes, players: "540K", survival: "12%" },
+  { id: 7, img: challengeFeatured, players: "1.8M", survival: "15%" },
+  { id: 8, img: challengeMemes, players: "960K", survival: "22%" },
+  { id: 9, img: challengeCats, players: "2.5M", survival: "35%" },
+  { id: 10, img: challengeAnimals, players: "1.1M", survival: "29%" },
+  { id: 11, img: challengeFails, players: "780K", survival: "11%" },
+  { id: 12, img: challengeDadjokes, players: "430K", survival: "48%" },
 ];
 
-const allChallenges = [
-  { img: challengeFeatured, funnyImg: challengeMemes },
-  ...challenges.map((c) => ({ img: c.img, funnyImg: challengeFeatured })),
+const recentChallenges = [
+  { id: 13, img: challengeMemes, players: "12K", survival: "38%" },
+  { id: 14, img: challengeAnimals, players: "45K", survival: "26%" },
+  { id: 15, img: challengeFails, players: "8.2K", survival: "14%" },
+  { id: 16, img: challengeCats, players: "67K", survival: "33%" },
+  { id: 17, img: challengeDadjokes, players: "3.4K", survival: "51%" },
+  { id: 18, img: challengeFeatured, players: "91K", survival: "19%" },
+  { id: 19, img: challengeAnimals, players: "22K", survival: "41%" },
+  { id: 20, img: challengeFails, players: "55K", survival: "8%" },
+  { id: 21, img: challengeMemes, players: "18K", survival: "30%" },
+  { id: 22, img: challengeCats, players: "7.1K", survival: "44%" },
+  { id: 23, img: challengeDadjokes, players: "29K", survival: "25%" },
+  { id: 24, img: challengeFeatured, players: "41K", survival: "17%" },
 ];
+
+const allChallengesList = [...featuredChallenges, ...recentChallenges];
+const allChallenges = allChallengesList.map((c, i) => ({
+  img: c.img,
+  funnyImg: allChallengesList[(i + 3) % allChallengesList.length].img,
+}));
 
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
+  const [challengeTab, setChallengeTab] = useState<"featured" | "recent">("featured");
   const [activeChallenge, setActiveChallenge] = useState<number | null>(null);
 
   if (activeChallenge !== null) {
@@ -96,54 +119,53 @@ const VariantB2 = () => {
       {/* Content */}
       <div className="flex-1 px-5">
         {activeTab === "try" ? (
-          <div className="space-y-5">
-            {/* Featured challenge */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden cursor-pointer hover:border-primary/40 transition-colors" onClick={() => setActiveChallenge(0)}>
-              <div className="aspect-[16/9] relative overflow-hidden">
-                <img src={challengeFeatured} alt="Try Not to Laugh" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                <div className="absolute top-3 left-3">
-                  <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Featured</span>
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
-                  <div>
-                    <p className="text-white text-sm font-bold">Try Not to Laugh</p>
-                    <p className="text-white/70 text-xs">2.1M players · 23% survival rate</p>
-                  </div>
-                  <div className="bg-primary rounded-full p-2.5 shadow-lg">
-                    <Play className="w-4 h-4 text-primary-foreground fill-primary-foreground" />
-                  </div>
-                </div>
-              </div>
+          <div className="space-y-4">
+            {/* Featured / Recent tabs */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setChallengeTab("featured")}
+                className={`text-sm font-bold pb-1 border-b-2 transition-colors ${
+                  challengeTab === "featured"
+                    ? "text-foreground border-primary"
+                    : "text-muted-foreground border-transparent hover:text-foreground"
+                }`}
+              >
+                🔥 Featured
+              </button>
+              <button
+                onClick={() => setChallengeTab("recent")}
+                className={`text-sm font-bold pb-1 border-b-2 transition-colors ${
+                  challengeTab === "recent"
+                    ? "text-foreground border-primary"
+                    : "text-muted-foreground border-transparent hover:text-foreground"
+                }`}
+              >
+                🕐 Recent
+              </button>
             </div>
 
-            {/* More challenges */}
-            <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-3">
-                More challenges
-              </p>
-              <div className="grid grid-cols-2 gap-2.5">
-                {challenges.map((c, i) => (
-                  <div
-                    key={c.id}
-                    onClick={() => setActiveChallenge(i + 1)}
-                    className="aspect-square rounded-xl overflow-hidden relative cursor-pointer group"
-                  >
-                    <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                      <Play className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white drop-shadow-lg" />
-                    </div>
-                    <div className="absolute bottom-2.5 left-2.5 right-2.5">
-                      <div className="flex items-center gap-1.5 text-white/90">
-                        <Play className="w-3 h-3 fill-white/90" />
-                        <span className="text-xs font-semibold">{c.players}</span>
-                      </div>
-                      <p className="text-[10px] text-white/60 mt-0.5">{c.survival} survival</p>
-                    </div>
+            {/* Challenge grid */}
+            <div className="grid grid-cols-2 gap-2.5">
+              {(challengeTab === "featured" ? featuredChallenges : recentChallenges).map((c, i) => (
+                <div
+                  key={c.id}
+                  onClick={() => setActiveChallenge(challengeTab === "featured" ? i : featuredChallenges.length + i)}
+                  className="aspect-square rounded-xl overflow-hidden relative cursor-pointer group"
+                >
+                  <img src={c.img} alt="Challenge" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                    <Play className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity fill-white drop-shadow-lg" />
                   </div>
-                ))}
-              </div>
+                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
+                    <div className="flex items-center gap-1.5 text-white/90">
+                      <Play className="w-3 h-3 fill-white/90" />
+                      <span className="text-xs font-semibold">{c.players}</span>
+                    </div>
+                    <p className="text-[10px] text-white/60 mt-0.5">{c.survival} survival</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         ) : (
