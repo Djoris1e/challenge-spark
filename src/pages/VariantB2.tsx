@@ -181,20 +181,20 @@ const VariantB2 = () => {
           <div className="flex gap-4">
             <button
               onClick={() => setChallengeTab("featured")}
-              className={`text-sm transition-colors ${
+              className={`text-sm pb-1 border-b-2 transition-all ${
                 challengeTab === "featured"
-                  ? "text-foreground font-black"
-                  : "text-muted-foreground font-medium hover:text-foreground"
+                  ? "text-foreground font-black border-foreground"
+                  : "text-muted-foreground font-medium border-transparent hover:text-foreground"
               }`}
             >
               Featured
             </button>
             <button
               onClick={() => setChallengeTab("recent")}
-              className={`text-sm transition-colors ${
+              className={`text-sm pb-1 border-b-2 transition-all ${
                 challengeTab === "recent"
-                  ? "text-foreground font-black"
-                  : "text-muted-foreground font-medium hover:text-foreground"
+                  ? "text-foreground font-black border-foreground"
+                  : "text-muted-foreground font-medium border-transparent hover:text-foreground"
               }`}
             >
               Recent
