@@ -137,7 +137,7 @@ const VariantB2 = () => {
                 onClick={() => setChallengeTab(tab)}
                 className={`px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
                   challengeTab === tab
-                    ? "bg-primary text-primary-foreground border-primary"
+                    ? "bg-transparent text-foreground border-foreground"
                     : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
                 }`}
               >

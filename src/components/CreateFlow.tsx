@@ -252,7 +252,7 @@ const CreateFlow = () => {
             onClick={() => setChallengeType(t.id)}
             className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
               challengeType === t.id
-                ? "bg-primary text-primary-foreground border-primary"
+                ? "bg-transparent text-foreground border-foreground"
                 : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
             }`}
           >
