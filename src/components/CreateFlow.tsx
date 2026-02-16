@@ -129,10 +129,6 @@ const CreateFlow = () => {
   if (step === "preview") {
     return (
       <div className="space-y-6">
-        <button onClick={handleTryDifferentEdit} className="flex items-center gap-1.5 text-primary text-sm font-medium">
-          <ArrowLeft className="w-4 h-4" /> Back
-        </button>
-
         <div className="text-center space-y-1.5">
           <h2 className="text-2xl font-bold text-foreground">Your Challenge</h2>
           <p className="text-sm text-muted-foreground">Here's what your friends will see</p>
@@ -166,9 +162,10 @@ const CreateFlow = () => {
           </Button>
           <Button
             onClick={handleTryDifferentEdit}
-            variant="secondary"
-            className="w-full rounded-full h-12 text-base font-semibold"
+            variant="outline"
+            className="w-full rounded-full h-12 text-base font-semibold border-border"
           >
+            <ArrowLeft className="w-4 h-4 mr-1" />
             Try Different Edit
           </Button>
         </div>
