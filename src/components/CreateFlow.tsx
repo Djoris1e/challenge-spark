@@ -242,29 +242,24 @@ const CreateFlow = () => {
       </div>
 
       {/* Challenge type selector */}
-      <div className="flex bg-secondary rounded-full p-1 gap-1">
-        <button
-          onClick={() => setChallengeType("ai-photo")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-sm font-medium transition-all ${
-            challengeType === "ai-photo"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <ImageIcon className="w-4 h-4" />
-          AI Photo
-        </button>
-        <button
-          onClick={() => setChallengeType("youtube")}
-          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-sm font-medium transition-all ${
-            challengeType === "youtube"
-              ? "bg-background text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <Youtube className="w-4 h-4" />
-          YouTube
-        </button>
+      <div className="flex gap-2">
+        {([
+          { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <ImageIcon className="w-3.5 h-3.5" /> },
+          { id: "youtube" as ChallengeType, label: "YouTube", icon: <Youtube className="w-3.5 h-3.5" /> },
+        ]).map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setChallengeType(t.id)}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
+              challengeType === t.id
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
+            }`}
+          >
+            {t.icon}
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {challengeType === "ai-photo" ? (
