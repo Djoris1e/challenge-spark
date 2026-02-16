@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send } from "lucide-react";
+import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send, ImageIcon, Youtube } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 import promptBromance from "@/assets/prompt-bromance.jpg";
@@ -18,6 +18,7 @@ import promptNoteeth from "@/assets/prompt-noteeth.jpg";
 import promptNobrows from "@/assets/prompt-nobrows.jpg";
 
 type Step = "create" | "preview" | "published";
+type ChallengeType = "ai-photo" | "youtube";
 
 const suggestionGroups = [
   {
@@ -51,8 +52,10 @@ const suggestionGroups = [
 
 const CreateFlow = () => {
   const [step, setStep] = useState<Step>("create");
+  const [challengeType, setChallengeType] = useState<ChallengeType>("ai-photo");
   const [photo, setPhoto] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
   
   const [transformedPhoto, setTransformedPhoto] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -73,6 +76,10 @@ const CreateFlow = () => {
     setStep("preview");
   };
 
+  const handlePublishYoutube = () => {
+    setStep("published");
+  };
+
   const handlePublish = () => {
     setStep("published");
   };
@@ -84,9 +91,10 @@ const CreateFlow = () => {
   const handleCreateAnother = () => {
     setPhoto(null);
     setPrompt("");
-    
+    setYoutubeUrl("");
     setTransformedPhoto(null);
     setCopied(false);
+    setChallengeType("ai-photo");
     setStep("create");
   };
 
@@ -229,82 +237,149 @@ const CreateFlow = () => {
       <div className="text-center space-y-1.5">
         <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Your friends see the normal photo first, then the AI version. Try not to laugh!
+          Pick a challenge type and send it to your friends!
         </p>
       </div>
 
-      {/* Photo upload */}
-      <div className="space-y-2">
-        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
-
-        {!photo ? (
-          <button
-            onClick={() => fileRef.current?.click()}
-            className="w-full h-32 rounded-2xl border-2 border-dashed border-primary/40 bg-card flex items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
-          >
-            <Camera className="w-6 h-6 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Take or upload a photo</span>
-          </button>
-        ) : (
-          <div className="relative rounded-2xl overflow-hidden">
-            <img src={photo} alt="Uploaded" className="w-full rounded-2xl" />
-            <button
-              onClick={() => { setPhoto(null); setPrompt(""); }}
-              className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
-            >
-              <X className="w-4 h-4 text-white" />
-            </button>
-            <button onClick={() => fileRef.current?.click()} className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
-              Change
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Prompt input with integrated send */}
-      <div className="relative">
-        <Textarea
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe the punchline…"
-          className="bg-secondary border-border rounded-xl resize-none min-h-[48px] max-h-[100px] text-sm pr-12 py-3"
-          rows={1}
-        />
+      {/* Challenge type selector */}
+      <div className="grid grid-cols-2 gap-3">
         <button
-          disabled={!photo || !prompt.trim()}
-          onClick={handleTransform}
-          className="absolute right-2 bottom-2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-30 transition-opacity"
+          onClick={() => setChallengeType("ai-photo")}
+          className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+            challengeType === "ai-photo"
+              ? "border-primary bg-primary/10"
+              : "border-border bg-card hover:border-primary/40"
+          }`}
         >
-          <Send className="w-4 h-4" />
+          <ImageIcon className={`w-6 h-6 ${challengeType === "ai-photo" ? "text-primary" : "text-muted-foreground"}`} />
+          <span className={`text-sm font-semibold ${challengeType === "ai-photo" ? "text-primary" : "text-foreground"}`}>AI Photo</span>
+          <span className="text-[11px] text-muted-foreground leading-tight">Transform a photo with AI</span>
+        </button>
+        <button
+          onClick={() => setChallengeType("youtube")}
+          className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+            challengeType === "youtube"
+              ? "border-primary bg-primary/10"
+              : "border-border bg-card hover:border-primary/40"
+          }`}
+        >
+          <Youtube className={`w-6 h-6 ${challengeType === "youtube" ? "text-primary" : "text-muted-foreground"}`} />
+          <span className={`text-sm font-semibold ${challengeType === "youtube" ? "text-primary" : "text-foreground"}`}>YouTube</span>
+          <span className="text-[11px] text-muted-foreground leading-tight">Share a funny video</span>
         </button>
       </div>
 
-      {/* Suggestion thumbnails grouped by category */}
-      <div className="space-y-5">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pick a funny prompt</p>
-        {suggestionGroups.map((group) => (
-          <div key={group.title} className="space-y-2.5">
-            <p className="text-sm font-bold text-foreground">{group.title}</p>
-            <div className="grid grid-cols-4 gap-3">
-              {group.items.map((s) => (
+      {challengeType === "ai-photo" ? (
+        <>
+          {/* Photo upload */}
+          <div className="space-y-2">
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+
+            {!photo ? (
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="w-full h-32 rounded-2xl border-2 border-dashed border-primary/40 bg-card flex items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
+              >
+                <Camera className="w-6 h-6 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Take or upload a photo</span>
+              </button>
+            ) : (
+              <div className="relative rounded-2xl overflow-hidden">
+                <img src={photo} alt="Uploaded" className="w-full rounded-2xl" />
                 <button
-                  key={s.id}
-                  onClick={() => {
-                    setPrompt(s.title);
-                    if (photo) handleTransform();
-                  }}
-                  className="flex flex-col items-center gap-1.5 group"
+                  onClick={() => { setPhoto(null); setPrompt(""); }}
+                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1"
                 >
-                  <div className="w-full aspect-square rounded-xl overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
-                    <img src={s.img} alt={s.title} className="w-full h-full object-cover" />
-                  </div>
-                  <p className="text-[11px] font-medium text-foreground leading-tight truncate w-full text-center">{s.title}</p>
+                  <X className="w-4 h-4 text-white" />
                 </button>
-              ))}
-            </div>
+                <button onClick={() => fileRef.current?.click()} className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-xs px-3 py-1.5 rounded-full">
+                  Change
+                </button>
+              </div>
+            )}
           </div>
-        ))}
-      </div>
+
+          {/* Prompt input with integrated send */}
+          <div className="relative">
+            <Textarea
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              placeholder="Describe the punchline…"
+              className="bg-secondary border-border rounded-xl resize-none min-h-[48px] max-h-[100px] text-sm pr-12 py-3"
+              rows={1}
+            />
+            <button
+              disabled={!photo || !prompt.trim()}
+              onClick={handleTransform}
+              className="absolute right-2 bottom-2 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-30 transition-opacity"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Suggestion thumbnails grouped by category */}
+          <div className="space-y-5">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pick a funny prompt</p>
+            {suggestionGroups.map((group) => (
+              <div key={group.title} className="space-y-2.5">
+                <p className="text-sm font-bold text-foreground">{group.title}</p>
+                <div className="grid grid-cols-4 gap-3">
+                  {group.items.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => {
+                        setPrompt(s.title);
+                        if (photo) handleTransform();
+                      }}
+                      className="flex flex-col items-center gap-1.5 group"
+                    >
+                      <div className="w-full aspect-square rounded-xl overflow-hidden border border-border group-hover:border-primary/50 transition-colors">
+                        <img src={s.img} alt={s.title} className="w-full h-full object-cover" />
+                      </div>
+                      <p className="text-[11px] font-medium text-foreground leading-tight truncate w-full text-center">{s.title}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* YouTube link input */}
+          <div className="space-y-3">
+            <div className="relative">
+              <input
+                type="url"
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                placeholder="Paste a YouTube link…"
+                className="w-full bg-secondary border border-border rounded-xl text-sm px-4 py-3 pr-12 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+              <Youtube className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            </div>
+
+            {youtubeUrl && /(?:youtube\.com|youtu\.be)/.test(youtubeUrl) && (
+              <div className="rounded-xl overflow-hidden bg-card border border-border aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${youtubeUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)?.[1] || ""}`}
+                  className="w-full h-full"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                />
+              </div>
+            )}
+          </div>
+
+          <Button
+            disabled={!youtubeUrl.trim() || !/(?:youtube\.com|youtu\.be)/.test(youtubeUrl)}
+            onClick={handlePublishYoutube}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-30"
+          >
+            Publish & Share
+          </Button>
+        </>
+      )}
     </div>
   );
 };
