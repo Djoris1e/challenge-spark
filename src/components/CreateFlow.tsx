@@ -242,30 +242,28 @@ const CreateFlow = () => {
       </div>
 
       {/* Challenge type selector */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="flex bg-secondary rounded-full p-1 gap-1">
         <button
           onClick={() => setChallengeType("ai-photo")}
-          className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-sm font-medium transition-all ${
             challengeType === "ai-photo"
-              ? "border-primary bg-primary/10"
-              : "border-border bg-card hover:border-primary/40"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          <ImageIcon className={`w-6 h-6 ${challengeType === "ai-photo" ? "text-primary" : "text-muted-foreground"}`} />
-          <span className={`text-sm font-semibold ${challengeType === "ai-photo" ? "text-primary" : "text-foreground"}`}>AI Photo</span>
-          <span className="text-[11px] text-muted-foreground leading-tight">Transform a photo with AI</span>
+          <ImageIcon className="w-4 h-4" />
+          AI Photo
         </button>
         <button
           onClick={() => setChallengeType("youtube")}
-          className={`flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all ${
+          className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-full text-sm font-medium transition-all ${
             challengeType === "youtube"
-              ? "border-primary bg-primary/10"
-              : "border-border bg-card hover:border-primary/40"
+              ? "bg-background text-foreground shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Youtube className={`w-6 h-6 ${challengeType === "youtube" ? "text-primary" : "text-muted-foreground"}`} />
-          <span className={`text-sm font-semibold ${challengeType === "youtube" ? "text-primary" : "text-foreground"}`}>YouTube</span>
-          <span className="text-[11px] text-muted-foreground leading-tight">Share a funny video</span>
+          <Youtube className="w-4 h-4" />
+          YouTube
         </button>
       </div>
 
