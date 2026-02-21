@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send, ImageIcon, Youtube } from "lucide-react";
+import { Camera, X, ArrowLeft, Copy, Check, MoreHorizontal, Send, ImageIcon, Youtube, Wand2, Upload, Film, Image } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 import promptBromance from "@/assets/prompt-bromance.jpg";
@@ -18,7 +18,7 @@ import promptNoteeth from "@/assets/prompt-noteeth.jpg";
 import promptNobrows from "@/assets/prompt-nobrows.jpg";
 
 type Step = "create" | "preview" | "published";
-type ChallengeType = "ai-photo" | "youtube";
+type ChallengeType = "ai-photo" | "manual-before-after" | "funny-video" | "funny-image";
 
 const suggestionGroups = [
   {
@@ -242,22 +242,27 @@ const CreateFlow = () => {
       </div>
 
       {/* Challenge type selector */}
-      <div className="flex gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {([
-          { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <ImageIcon className="w-3.5 h-3.5" /> },
-          { id: "youtube" as ChallengeType, label: "YouTube", icon: <Youtube className="w-3.5 h-3.5" /> },
+          { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-4 h-4" />, desc: "AI makes it funny" },
+          { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-4 h-4" />, desc: "Upload both images" },
+          { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-4 h-4" />, desc: "Upload a video" },
+          { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-4 h-4" />, desc: "Upload an image" },
         ]).map((t) => (
           <button
             key={t.id}
             onClick={() => setChallengeType(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold border transition-all whitespace-nowrap ${
+            className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-left border transition-all ${
               challengeType === t.id
                 ? "bg-transparent text-foreground border-foreground"
                 : "bg-transparent text-muted-foreground border-border hover:border-foreground hover:text-foreground"
             }`}
           >
             {t.icon}
-            {t.label}
+            <div className="min-w-0">
+              <p className="text-xs font-semibold leading-tight">{t.label}</p>
+              <p className="text-[10px] opacity-60 leading-tight">{t.desc}</p>
+            </div>
           </button>
         ))}
       </div>
@@ -337,36 +342,147 @@ const CreateFlow = () => {
             ))}
           </div>
         </>
-      ) : (
+      ) : challengeType === "manual-before-after" ? (
         <>
-          {/* YouTube link input */}
+          {/* Manual before/after: two photo uploads */}
           <div className="space-y-3">
-            <div className="relative">
-              <input
-                type="url"
-                value={youtubeUrl}
-                onChange={(e) => setYoutubeUrl(e.target.value)}
-                placeholder="Paste a YouTube link…"
-                className="w-full bg-secondary border border-border rounded-xl text-sm px-4 py-3 pr-12 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              />
-              <Youtube className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            </div>
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
 
-            {youtubeUrl && /(?:youtube\.com|youtu\.be)/.test(youtubeUrl) && (
-              <div className="rounded-xl overflow-hidden bg-card border border-border aspect-video">
-                <iframe
-                  src={`https://www.youtube.com/embed/${youtubeUrl.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)?.[1] || ""}`}
-                  className="w-full h-full"
-                  allowFullScreen
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
+            <div className="grid grid-cols-2 gap-3">
+              {/* First photo (setup) */}
+              <div className="space-y-1.5">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-center">The Setup</p>
+                {!photo ? (
+                  <button
+                    onClick={() => { fileRef.current?.setAttribute("data-target", "photo"); fileRef.current?.click(); }}
+                    className="w-full aspect-[3/4] rounded-xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/70 transition-colors"
+                  >
+                    <Camera className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">Upload</span>
+                  </button>
+                ) : (
+                  <div className="relative rounded-xl overflow-hidden aspect-[3/4]">
+                    <img src={photo} alt="Setup" className="w-full h-full object-cover" />
+                    <button onClick={() => setPhoto(null)} className="absolute top-1.5 right-1.5 bg-black/60 rounded-full p-0.5">
+                      <X className="w-3 h-3 text-white" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Second photo (punchline) */}
+              <div className="space-y-1.5">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold text-center">The Punchline</p>
+                {!transformedPhoto ? (
+                  <button
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = "image/*";
+                      input.onchange = (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (ev) => setTransformedPhoto(ev.target?.result as string);
+                          reader.readAsDataURL(file);
+                        }
+                      };
+                      input.click();
+                    }}
+                    className="w-full aspect-[3/4] rounded-xl border-2 border-dashed border-primary/40 bg-card flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/70 transition-colors"
+                  >
+                    <Camera className="w-5 h-5 text-muted-foreground" />
+                    <span className="text-[10px] text-muted-foreground">Upload</span>
+                  </button>
+                ) : (
+                  <div className="relative rounded-xl overflow-hidden aspect-[3/4]">
+                    <img src={transformedPhoto} alt="Punchline" className="w-full h-full object-cover" />
+                    <button onClick={() => setTransformedPhoto(null)} className="absolute top-1.5 right-1.5 bg-black/60 rounded-full p-0.5">
+                      <X className="w-3 h-3 text-white" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <Button
+            disabled={!photo || !transformedPhoto}
+            onClick={handlePublish}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-30"
+          >
+            Publish & Share
+          </Button>
+        </>
+      ) : challengeType === "funny-video" ? (
+        <>
+          {/* Funny video upload */}
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                const input = document.createElement("input");
+                input.type = "file";
+                input.accept = "video/*";
+                input.onchange = (e) => {
+                  const file = (e.target as HTMLInputElement).files?.[0];
+                  if (file) {
+                    const url = URL.createObjectURL(file);
+                    setYoutubeUrl(url);
+                  }
+                };
+                input.click();
+              }}
+              className="w-full h-32 rounded-2xl border-2 border-dashed border-primary/40 bg-card flex items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
+            >
+              <Film className="w-6 h-6 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Upload a funny video</span>
+            </button>
+
+            {youtubeUrl && (
+              <div className="relative rounded-xl overflow-hidden bg-card border border-border aspect-video">
+                <video src={youtubeUrl} className="w-full h-full object-cover" controls />
+                <button onClick={() => setYoutubeUrl("")} className="absolute top-2 right-2 bg-black/60 rounded-full p-1">
+                  <X className="w-4 h-4 text-white" />
+                </button>
               </div>
             )}
           </div>
 
           <Button
-            disabled={!youtubeUrl.trim() || !/(?:youtube\.com|youtu\.be)/.test(youtubeUrl)}
-            onClick={handlePublishYoutube}
+            disabled={!youtubeUrl}
+            onClick={handlePublish}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-30"
+          >
+            Publish & Share
+          </Button>
+        </>
+      ) : (
+        <>
+          {/* Funny image upload */}
+          <div className="space-y-3">
+            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
+
+            {!photo ? (
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="w-full h-32 rounded-2xl border-2 border-dashed border-primary/40 bg-card flex items-center justify-center gap-3 cursor-pointer hover:border-primary/70 transition-colors"
+              >
+                <Image className="w-6 h-6 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Upload a funny image</span>
+              </button>
+            ) : (
+              <div className="relative rounded-2xl overflow-hidden">
+                <img src={photo} alt="Funny" className="w-full rounded-2xl" />
+                <button onClick={() => setPhoto(null)} className="absolute top-2 right-2 bg-black/60 rounded-full p-1">
+                  <X className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <Button
+            disabled={!photo}
+            onClick={handlePublish}
             className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-full h-12 text-base font-semibold disabled:opacity-30"
           >
             Publish & Share
