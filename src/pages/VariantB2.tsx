@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import CreateFlow from "@/components/CreateFlow";
+import CreateFlowV2 from "@/components/CreateFlowV2";
 import ChallengePlayer from "@/components/ChallengePlayer";
 import challengeFeatured from "@/assets/challenge-featured.jpg";
 import challengeCats from "@/assets/challenge-cats.jpg";
@@ -46,12 +47,14 @@ const allChallenges = allChallengesList.map((c, i) => ({
 }));
 
 type SwitcherStyle = "pill" | "underline" | "chips" | "dropdown" | "text";
+type CreateFlowStyle = "v1" | "v2";
 
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
   const [challengeTab, setChallengeTab] = useState<"featured" | "recent">("featured");
   const [activeChallenge, setActiveChallenge] = useState<number | null>(null);
   const [switcherStyle, setSwitcherStyle] = useState<SwitcherStyle>("pill");
+  const [createFlowStyle, setCreateFlowStyle] = useState<CreateFlowStyle>("v1");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   if (activeChallenge !== null) {
@@ -207,7 +210,7 @@ const VariantB2 = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col max-w-md mx-auto">
       {/* TEMP: Style selector */}
-      <div className="px-5 pt-2 pb-1">
+      <div className="px-5 pt-2 pb-1 flex gap-2">
         <select
           value={switcherStyle}
           onChange={(e) => setSwitcherStyle(e.target.value as SwitcherStyle)}
@@ -218,6 +221,14 @@ const VariantB2 = () => {
           <option value="chips">Style: Chips</option>
           <option value="dropdown">Style: Dropdown</option>
           <option value="text">Style: Bold Text</option>
+        </select>
+        <select
+          value={createFlowStyle}
+          onChange={(e) => setCreateFlowStyle(e.target.value as CreateFlowStyle)}
+          className="text-xs px-2 py-1 rounded border border-border bg-background text-foreground"
+        >
+          <option value="v1">Create: Grid Picker</option>
+          <option value="v2">Create: Card List</option>
         </select>
       </div>
 
@@ -296,7 +307,7 @@ const VariantB2 = () => {
             </div>
           </div>
         ) : (
-          <CreateFlow />
+          createFlowStyle === "v1" ? <CreateFlow /> : <CreateFlowV2 />
         )}
       </div>
 
