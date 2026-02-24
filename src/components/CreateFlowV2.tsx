@@ -51,10 +51,10 @@ const suggestionGroups = [
 ];
 
 const challengeTypes = [
-  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-5 h-5" />, desc: "Upload a photo and let AI make it hilarious", tag: "Most Popular" },
-  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-5 h-5" />, desc: "Upload a normal photo and a funny version" },
-  { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-5 h-5" />, desc: "Upload a video that'll make them crack" },
-  { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-5 h-5" />, desc: "Upload a single image challenge" },
+  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-5 h-5" />, desc: "Upload a selfie, AI warps it into something hilarious", tag: "Most Popular" },
+  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-5 h-5" />, desc: "Upload a normal photo + a funny reveal" },
+  { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-5 h-5" />, desc: "Upload a clip that's impossible not to laugh at" },
+  { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-5 h-5" />, desc: "One image so funny it breaks poker faces" },
 ];
 
 const CreateFlowV2 = () => {
@@ -201,7 +201,7 @@ const CreateFlowV2 = () => {
         <div className="text-center space-y-1.5">
           <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            What kind of challenge do you want to make?
+            Make something so funny your friends can't keep a straight face. Pick a type below.
           </p>
         </div>
 

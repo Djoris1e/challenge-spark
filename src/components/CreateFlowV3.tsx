@@ -51,10 +51,10 @@ const suggestionGroups = [
 ];
 
 const challengeTypes = [
-  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-6 h-6" />, emoji: "🪄" },
-  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-6 h-6" />, emoji: "📸" },
-  { id: "funny-video" as ChallengeType, label: "Video", icon: <Film className="w-6 h-6" />, emoji: "🎬" },
-  { id: "funny-image" as ChallengeType, label: "Image", icon: <Image className="w-6 h-6" />, emoji: "😂" },
+  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-6 h-6" />, emoji: "🪄", desc: "Upload a selfie, AI warps it into something hilarious" },
+  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-6 h-6" />, emoji: "📸", desc: "Upload a normal photo + a funny reveal" },
+  { id: "funny-video" as ChallengeType, label: "Video", icon: <Film className="w-6 h-6" />, emoji: "🎬", desc: "Upload a clip that's impossible not to laugh at" },
+  { id: "funny-image" as ChallengeType, label: "Image", icon: <Image className="w-6 h-6" />, emoji: "😂", desc: "One image so funny it breaks poker faces" },
 ];
 
 /**
@@ -169,7 +169,7 @@ const CreateFlowV3 = () => {
     <div className="space-y-5">
       <div className="text-center space-y-1.5">
         <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
-        <p className="text-sm text-muted-foreground">Tap a type, then add your content</p>
+        <p className="text-sm text-muted-foreground">Make something so funny your friends can't keep a straight face.</p>
       </div>
 
       {/* Icon tab bar */}
@@ -189,6 +189,11 @@ const CreateFlowV3 = () => {
           </button>
         ))}
       </div>
+
+      {/* Per-type description */}
+      <p className="text-xs text-muted-foreground text-center -mt-2">
+        {challengeTypes.find((t) => t.id === challengeType)?.desc}
+      </p>
 
       {/* Type-specific content */}
       {challengeType === "ai-photo" && (

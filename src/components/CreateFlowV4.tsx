@@ -51,10 +51,10 @@ const suggestionGroups = [
 ];
 
 const challengeTypes = [
-  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-5 h-5" />, desc: "AI makes it funny", color: "bg-primary/10 text-primary border-primary/20" },
-  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-5 h-5" />, desc: "Upload both images", color: "bg-accent/50 text-accent-foreground border-accent" },
-  { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-5 h-5" />, desc: "Upload a video", color: "bg-secondary text-secondary-foreground border-border" },
-  { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-5 h-5" />, desc: "Upload an image", color: "bg-secondary text-secondary-foreground border-border" },
+  { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-5 h-5" />, desc: "Upload a selfie, AI warps it into something hilarious", color: "bg-primary/10 text-primary border-primary/20" },
+  { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-5 h-5" />, desc: "Upload a normal photo + a funny reveal", color: "bg-accent/50 text-accent-foreground border-accent" },
+  { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-5 h-5" />, desc: "Upload a clip that's impossible not to laugh at", color: "bg-secondary text-secondary-foreground border-border" },
+  { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-5 h-5" />, desc: "One image so funny it breaks poker faces", color: "bg-secondary text-secondary-foreground border-border" },
 ];
 
 /**
@@ -173,7 +173,7 @@ const CreateFlowV4 = () => {
       <div className="space-y-5">
         <div className="text-center space-y-1.5">
           <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
-          <p className="text-sm text-muted-foreground">Choose how to make them laugh</p>
+          <p className="text-sm text-muted-foreground">Make something so funny your friends can't keep a straight face.</p>
         </div>
 
         {/* Featured hero card */}

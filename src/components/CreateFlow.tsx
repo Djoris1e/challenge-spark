@@ -237,17 +237,17 @@ const CreateFlow = () => {
       <div className="text-center space-y-1.5">
         <h2 className="text-xl font-bold text-foreground">Create Challenge</h2>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          Pick a challenge type and send it to your friends!
+          Make something so funny your friends can't keep a straight face. Pick a type below.
         </p>
       </div>
 
       {/* Challenge type selector */}
       <div className="grid grid-cols-2 gap-2">
         {([
-          { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-4 h-4" />, desc: "AI makes it funny" },
-          { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-4 h-4" />, desc: "Upload both images" },
-          { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-4 h-4" />, desc: "Upload a video" },
-          { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-4 h-4" />, desc: "Upload an image" },
+          { id: "ai-photo" as ChallengeType, label: "AI Photo", icon: <Wand2 className="w-4 h-4" />, desc: "Upload a selfie, AI warps it into something hilarious" },
+          { id: "manual-before-after" as ChallengeType, label: "Before & After", icon: <Upload className="w-4 h-4" />, desc: "Upload a normal photo + a funny reveal" },
+          { id: "funny-video" as ChallengeType, label: "Funny Video", icon: <Film className="w-4 h-4" />, desc: "Upload a clip that's impossible not to laugh at" },
+          { id: "funny-image" as ChallengeType, label: "Funny Image", icon: <Image className="w-4 h-4" />, desc: "One image so funny it breaks poker faces" },
         ]).map((t) => (
           <button
             key={t.id}
