@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 import CreateFlow from "@/components/CreateFlow";
 import CreateFlowV2 from "@/components/CreateFlowV2";
+import CreateFlowV3 from "@/components/CreateFlowV3";
+import CreateFlowV4 from "@/components/CreateFlowV4";
 import ChallengePlayer from "@/components/ChallengePlayer";
 import challengeFeatured from "@/assets/challenge-featured.jpg";
 import challengeCats from "@/assets/challenge-cats.jpg";
@@ -47,7 +49,7 @@ const allChallenges = allChallengesList.map((c, i) => ({
 }));
 
 type SwitcherStyle = "pill" | "underline" | "chips" | "dropdown" | "text";
-type CreateFlowStyle = "v1" | "v2";
+type CreateFlowStyle = "v1" | "v2" | "v3" | "v4";
 
 const VariantB2 = () => {
   const [activeTab, setActiveTab] = useState<"try" | "create">("try");
@@ -229,6 +231,8 @@ const VariantB2 = () => {
         >
           <option value="v1">Create: Grid Picker</option>
           <option value="v2">Create: Card List</option>
+          <option value="v3">Create: Icon Tabs</option>
+          <option value="v4">Create: Hero Card</option>
         </select>
       </div>
 
@@ -307,7 +311,9 @@ const VariantB2 = () => {
             </div>
           </div>
         ) : (
-          createFlowStyle === "v1" ? <CreateFlow /> : <CreateFlowV2 />
+          createFlowStyle === "v1" ? <CreateFlow /> :
+          createFlowStyle === "v2" ? <CreateFlowV2 /> :
+          createFlowStyle === "v3" ? <CreateFlowV3 /> : <CreateFlowV4 />
         )}
       </div>
 
